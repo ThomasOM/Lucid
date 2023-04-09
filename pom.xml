@@ -12,6 +12,15 @@
         <module>generator</module>
     </modules>
     <packaging>pom</packaging>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub ThomasOM Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/ThomasOM/Lucid</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <!--  Lombok  -->
         <dependency>
@@ -21,6 +30,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

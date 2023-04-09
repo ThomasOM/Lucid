@@ -4,7 +4,7 @@ import dev.thomazz.lucid.Lucid;
 import dev.thomazz.lucid.channel.LucidChannelHandler;
 import dev.thomazz.lucid.packet.PacketSource;
 import dev.thomazz.lucid.packet.PacketType;
-import dev.thomazz.lucid.util.PacketMethodCache;
+import dev.thomazz.lucid.util.PacketAccessCache;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
@@ -26,11 +26,16 @@ public class PacketAccessor {
 
     @SuppressWarnings("unchecked")
     public <T> T get(int fieldId) {
-        return (T) PacketMethodCache.get(this.handle.getClass(), this.handle, fieldId);
+        return (T) PacketAccessCache.get(this.handle.getClass(), this.handle, fieldId);
     }
 
     public <T> void set(int fieldId, T value) {
-        PacketMethodCache.set(this.handle.getClass(), this.handle, fieldId, value);
+        PacketAccessCache.set(this.handle.getClass(), this.handle, fieldId, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> Class<T> getType(int fieldId) {
+        return (Class<T>) PacketAccessCache.type(this.handle.getClass(), fieldId);
     }
 
     public void send(Player player) {

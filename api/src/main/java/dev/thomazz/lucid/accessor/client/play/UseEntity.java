@@ -24,12 +24,15 @@ public final class UseEntity extends PacketAccessor {
         this.set(0, value);
     }
 
-    public Object getAction() {
-        return this.get(1);
+    public EntityUseAction getAction() {
+        int ordinal = ((Enum<?>) this.get(1)).ordinal();
+        return EntityUseAction.values()[ordinal];
     }
 
-    public void setAction(Object value) {
-        this.set(1, value);
+    public void setAction(EntityUseAction value) {
+        Class<?> enumClass = this.getType(1);
+        Object object = enumClass.getEnumConstants()[value.ordinal()];
+        this.set(1, object);
     }
 
     public boolean getUsingSecondaryAction() {
@@ -38,5 +41,11 @@ public final class UseEntity extends PacketAccessor {
 
     public void setUsingSecondaryAction(boolean value) {
         this.set(2, value);
+    }
+
+    public enum EntityUseAction {
+        INTERACT,
+        ATTACK,
+        INTERACT_AT
     }
 }
