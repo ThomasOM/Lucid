@@ -25,27 +25,57 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public double getX() {
+        Class<?> type = this.getType(1);
+        if (int.class.isAssignableFrom(type)) {
+            return (double) this.get(1) / 32.0;
+        }
+
         return this.get(1);
     }
 
     public void setX(double value) {
-        this.set(1, value);
+        Class<?> type = this.getType(1);
+        if (int.class.isAssignableFrom(type)) {
+            this.set(1, (int) (value * 32.0));
+        } else {
+            this.set(1, value);
+        }
     }
 
     public double getY() {
+        Class<?> type = this.getType(2);
+        if (int.class.isAssignableFrom(type)) {
+            return (double) this.get(2) / 32.0;
+        }
+
         return this.get(2);
     }
 
     public void setY(double value) {
-        this.set(2, value);
+        Class<?> type = this.getType(2);
+        if (int.class.isAssignableFrom(type)) {
+            this.set(2, (int) (value * 32.0));
+        } else {
+            this.set(2, value);
+        }
     }
 
     public double getZ() {
+        Class<?> type = this.getType(3);
+        if (int.class.isAssignableFrom(type)) {
+            return (double) this.get(3) / 32.0;
+        }
+
         return this.get(3);
     }
 
     public void setZ(double value) {
-        this.set(3, value);
+        Class<?> type = this.getType(3);
+        if (int.class.isAssignableFrom(type)) {
+            this.set(3, (int) (value * 32.0));
+        } else {
+            this.set(3, value);
+        }
     }
 
     public byte getYRot() {

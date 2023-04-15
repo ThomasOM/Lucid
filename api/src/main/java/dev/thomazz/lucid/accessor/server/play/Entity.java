@@ -24,28 +24,58 @@ public final class Entity extends PacketAccessor {
         this.set(0, value);
     }
 
-    public short getXa() {
-        return this.get(1);
+    public double getXa() {
+        Class<?> type = this.getType(1);
+        if (short.class.equals(type)) {
+            return ((short) this.get(1)) / (32.0 * 128.0);
+        } else {
+            return ((byte) this.get(1)) / 32.0;
+        }
     }
 
-    public void setXa(short value) {
-        this.set(1, value);
+    public void setXa(double value) {
+        Class<?> type = this.getType(1);
+        if (short.class.equals(type)) {
+            this.set(1, (short) (value * (32.0 * 128.0)));
+        } else {
+            this.set(1, (short) (value * 32.0));
+        }
     }
 
-    public short getYa() {
-        return this.get(2);
+    public double getYa() {
+        Class<?> type = this.getType(2);
+        if (short.class.equals(type)) {
+            return ((short) this.get(2)) / (32.0 * 128.0);
+        } else {
+            return ((byte) this.get(2)) / 32.0;
+        }
     }
 
-    public void setYa(short value) {
-        this.set(2, value);
+    public void setYa(double value) {
+        Class<?> type = this.getType(2);
+        if (short.class.equals(type)) {
+            this.set(2, (short) (value * (32.0 * 128.0)));
+        } else {
+            this.set(2, (short) (value * 32.0));
+        }
     }
 
-    public short getZa() {
-        return this.get(3);
+    public double getZa() {
+        Class<?> type = this.getType(3);
+        if (short.class.equals(type)) {
+            return ((short) this.get(3)) / (32.0 * 128.0);
+        } else {
+            return ((byte) this.get(3)) / 32.0;
+        }
     }
 
-    public void setZa(short value) {
-        this.set(3, value);
+    public void setZa(double value) {
+        Class<?> type = this.getType(3);
+        if (short.class.equals(type)) {
+            this.set(3, (short) (value * (32.0 * 128.0)));
+        } else {
+            this.set(3, (short) (value * 32.0));
+        }
     }
 
     public byte getYRot() {

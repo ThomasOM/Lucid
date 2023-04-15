@@ -24,12 +24,15 @@ public final class EntityAction extends PacketAccessor {
         this.set(0, value);
     }
 
-    public Object getAction() {
-        return this.get(1);
+    public Action getAction() {
+        int ordinal = ((Enum<?>) this.get(1)).ordinal();
+        return Action.values()[ordinal];
     }
 
-    public void setAction(Object value) {
-        this.set(1, value);
+    public void setAction(Action value) {
+        Class<?> enumClass = this.getType(1);
+        Object object = enumClass.getEnumConstants()[value.ordinal()];
+        this.set(1, object);
     }
 
     public int getData() {
@@ -38,5 +41,17 @@ public final class EntityAction extends PacketAccessor {
 
     public void setData(int value) {
         this.set(2, value);
+    }
+
+    public enum Action {
+        START_SNEAKING,
+        STOP_SNEAKING,
+        LEAVE_BED,
+        START_SPRINTING,
+        STOP_SPRINTING,
+        START_HORSE_JUMP,
+        STOP_HORSE_JUMP,
+        OPEN_HORSE_INVENTORY,
+        START_FLYING_WITH_ELYTRA
     }
 }

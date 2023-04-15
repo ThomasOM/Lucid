@@ -47,7 +47,7 @@ public class ServerConnectionInjector implements Injector {
 
             for (Channel channel : access.getAllChannels()) {
                 try {
-                    channel.pipeline().addBefore("packet_handler", "mini-packet-handler", new LucidChannelHandler());
+                    channel.pipeline().addBefore("packet_handler", LucidChannelHandler.HANDLER_NAME, new LucidChannelHandler());
                 } catch (Exception ignored) {
                 }
             }
@@ -78,7 +78,7 @@ public class ServerConnectionInjector implements Injector {
 
             for (Channel channel : access.getAllChannels()) {
                 try {
-                    channel.pipeline().remove("mini-packet-handler");
+                    channel.pipeline().remove(LucidChannelHandler.HANDLER_NAME);
                 } catch (Exception ignored) {
                 }
             }

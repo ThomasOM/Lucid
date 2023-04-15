@@ -1,7 +1,7 @@
 package dev.thomazz.lucid.packet;
 
 import com.google.common.collect.ImmutableList;
-import dev.thomazz.lucid.util.PacketAccessCache;
+import dev.thomazz.lucid.util.AccessCache;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -55,7 +55,7 @@ public final class PacketType {
         }
 
         try {
-            return PacketAccessCache.create(this.packetClass);
+            return AccessCache.create(this.packetClass);
         } catch (Exception ex) {
             throw new RuntimeException("Could not create new packet: " + this.packetClass);
         }

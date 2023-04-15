@@ -13,7 +13,7 @@ import lombok.experimental.UtilityClass;
 import sun.reflect.ReflectionFactory;
 
 @UtilityClass
-public class PacketAccessCache {
+public class AccessCache {
     private final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     private final Constructor<?> DEFAULT_CONSTRUCTOR;
 

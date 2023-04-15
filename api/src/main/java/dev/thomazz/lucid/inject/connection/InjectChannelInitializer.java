@@ -20,6 +20,6 @@ public class InjectChannelInitializer extends ChannelInitializer<Channel> {
         Method initChannel = ChannelInitializer.class.getDeclaredMethod("initChannel", Channel.class);
         initChannel.setAccessible(true);
         initChannel.invoke(this.parent, channel);
-        channel.pipeline().addBefore("packet_handler", "mini-packet-handler", new LucidChannelHandler());
+        channel.pipeline().addBefore("packet_handler", LucidChannelHandler.HANDLER_NAME, new LucidChannelHandler());
     }
 }

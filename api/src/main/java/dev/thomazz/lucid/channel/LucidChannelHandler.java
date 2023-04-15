@@ -12,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class LucidChannelHandler extends ChannelDuplexHandler {
-    public static final String HANDLER_NAME = "mini-packet-handler";
+    public static final String HANDLER_NAME = "lucid-handler";
     public volatile Player player;
     public volatile boolean joined;
 
