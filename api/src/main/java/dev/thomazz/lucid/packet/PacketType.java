@@ -1,12 +1,13 @@
 package dev.thomazz.lucid.packet;
 
 import com.google.common.collect.ImmutableList;
-import dev.thomazz.lucid.util.AccessCache;
+import dev.thomazz.lucid.accessor.AccessorCache;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.thomazz.lucid.util.MinecraftReflection;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
@@ -54,11 +55,7 @@ public final class PacketType {
             throw new IllegalStateException("Packet is not available in current runtime!");
         }
 
-        try {
-            return AccessCache.create(this.packetClass);
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not create new packet: " + this.packetClass);
-        }
+        return AccessorCache.create(this.packetClass);
     }
 
     public static class Handshake {
@@ -381,7 +378,7 @@ public final class PacketType {
     public static Class<?> getPacketClass(ClassLoader loader, PacketState state, PacketSource source, String... names) {
         for (String nameStub : names) {
             try {
-                String packageName = Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit", "net.minecraft.server");
+                String packageName = MinecraftReflection.getMinecraftPackageLegacy();
 
                 String className;
                 if (nameStub.contains("$")) {
@@ -397,7 +394,7 @@ public final class PacketType {
             }
 
             try {
-                String packageName = "net.minecraft.network.protocol";
+                String packageName = MinecraftReflection.getMinecraftPackage() + ".network.protocol";
 
                 String className;
                 if (nameStub.contains("$")) {
@@ -413,7 +410,7 @@ public final class PacketType {
             }
 
             try {
-                String packageName = "net.minecraft.network.protocol";
+                String packageName = MinecraftReflection.getMinecraftPackage() + ".network.protocol";
                 String className = packageName + "." + state.getName() + "." + source.getName() + nameStub + "Packet";
                 return Class.forName(className, true, loader);
             } catch (Throwable ignored) {

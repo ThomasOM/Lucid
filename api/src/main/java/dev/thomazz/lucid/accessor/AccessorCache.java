@@ -1,4 +1,4 @@
-package dev.thomazz.lucid.util;
+package dev.thomazz.lucid.accessor;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -13,7 +13,7 @@ import lombok.experimental.UtilityClass;
 import sun.reflect.ReflectionFactory;
 
 @UtilityClass
-public class AccessCache {
+public class AccessorCache {
     private final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     private final Constructor<?> DEFAULT_CONSTRUCTOR;
 
@@ -28,11 +28,12 @@ public class AccessCache {
         }
     }
 
-    public Object get(Class<?> type, Object object, int id) {
+    @SuppressWarnings("unchecked")
+    public <T> T get(Class<?> type, Object object, int id) {
         try {
             CacheContainer container = TYPE_CONTAINERS.computeIfAbsent(type, CacheContainer::new);
             MethodHandle handle = container.getGetter(id);
-            return handle.invoke(object);
+            return (T) handle.invoke(object);
         } catch (Throwable ignored) {
             return null;
         }
@@ -47,23 +48,28 @@ public class AccessCache {
         }
     }
 
-    public Class<?> type(Class<?> type, int id) {
+    @SuppressWarnings("unchecked")
+    public <T> Class<T> type(Class<?> type, int id) {
         try {
             CacheContainer container = TYPE_CONTAINERS.computeIfAbsent(type, CacheContainer::new);
             Field field = container.getField(id);
-            return field.getType();
+            return (Class<T>) field.getType();
         } catch (Throwable ignored) {
             return null;
         }
     }
 
-    public <T> T create(Class<T> clazz) throws Exception {
-        Constructor<?> noArgs = TYPE_CONSTRUCTORS.computeIfAbsent(clazz,
+    public <T> T create(Class<T> clazz) {
+        try {
+            Constructor<?> noArgs = TYPE_CONSTRUCTORS.computeIfAbsent(clazz,
                 type -> ReflectionFactory.getReflectionFactory()
-                        .newConstructorForSerialization(clazz, DEFAULT_CONSTRUCTOR)
-        );
+                    .newConstructorForSerialization(clazz, DEFAULT_CONSTRUCTOR)
+            );
 
-        return clazz.cast(noArgs.newInstance());
+            return clazz.cast(noArgs.newInstance());
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to create object: " + clazz.getName(), ex);
+        }
     }
 
     private static class CacheContainer {

@@ -4,38 +4,25 @@ import dev.thomazz.lucid.Lucid;
 import dev.thomazz.lucid.channel.LucidChannelHandler;
 import dev.thomazz.lucid.packet.PacketSource;
 import dev.thomazz.lucid.packet.PacketType;
-import dev.thomazz.lucid.util.AccessCache;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 
 /**
  * Base implementation for accessing fields in packet objects.
  */
 @Getter
-@RequiredArgsConstructor
-public class PacketAccessor {
+public class PacketAccessor extends Accessor {
     protected final PacketType packetType;
-    protected final Object handle;
 
     public PacketAccessor(PacketType packetType) {
         this(packetType, packetType.createPacket());
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T get(int fieldId) {
-        return (T) AccessCache.get(this.handle.getClass(), this.handle, fieldId);
-    }
-
-    public <T> void set(int fieldId, T value) {
-        AccessCache.set(this.handle.getClass(), this.handle, fieldId, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <T> Class<T> getType(int fieldId) {
-        return (Class<T>) AccessCache.type(this.handle.getClass(), fieldId);
+    public PacketAccessor(PacketType packetType, Object handle) {
+        super(handle);
+        this.packetType = packetType;
     }
 
     public void send(Player player) {
