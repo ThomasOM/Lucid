@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BlockPosition {
+public class SectionPosition {
     private int x;
     private int y;
     private int z;

@@ -1,6 +1,8 @@
 package dev.thomazz.lucid.util;
 
 import lombok.experimental.UtilityClass;
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -62,6 +64,23 @@ public class ReflectionUtil {
     }
 
     @SafeVarargs
+    @SuppressWarnings("unchecked")
+    public <T> Constructor<T> findConstructor(Class<?> clazz, Predicate<Constructor<?>>... conditions) {
+        outer:
+        for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+            for (Predicate<Constructor<?>> condition : conditions) {
+                if (!condition.test(constructor)) {
+                    continue outer;
+                }
+            }
+
+            return (Constructor<T>) constructor;
+        }
+
+        throw new RuntimeException("Could not find method in class " + clazz.getName() + "!");
+    }
+
+    @SafeVarargs
     public Field findField(Class<?> clazz, Predicate<Field>... conditions) {
         outer:
         for (Field field : clazz.getDeclaredFields()) {
@@ -81,6 +100,15 @@ public class ReflectionUtil {
     public <T> T invokeMethod(Method method, Object object, Object... params) {
         try {
             return (T) method.invoke(object, params);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T invokeConstructor(Constructor<?> constructor, Object... params) {
+        try {
+            return (T) constructor.newInstance(params);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

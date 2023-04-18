@@ -9,6 +9,8 @@ import dev.thomazz.lucid.packet.PacketType;
 import dev.thomazz.lucid.player.PlayerManager;
 import java.util.Collection;
 import java.util.stream.Collectors;
+
+import dev.thomazz.lucid.version.MinecraftVersion;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.HandlerList;
@@ -29,7 +31,6 @@ public final class Lucid {
     private final ChannelAccess channelAccess;
 
     private JavaPlugin plugin;
-
     private boolean destroyed;
 
     private Lucid(Injector injector) {

@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BlockPosition {
-    private int x;
-    private int y;
-    private int z;
+public class ChunkCoord {
+    private final int x;
+    private final int z;
 }
