@@ -23,7 +23,7 @@ public class PlayerManager implements Listener {
         InetAddress address = login.getAddress();
 
         Channel channel = this.channelMap.compute(player, (key, value) -> lucid.getChannelAccess().getChannel(address));
-        LucidChannelHandler handler = getHandler(channel);
+        LucidChannelHandler handler = this.getHandler(channel);
         handler.player = player;
     }
 
@@ -33,7 +33,7 @@ public class PlayerManager implements Listener {
         Player player = join.getPlayer();
         Channel channel = this.channelMap.computeIfAbsent(player, key -> lucid.getChannelAccess().getChannel(key));
 
-        LucidChannelHandler handler = getHandler(channel);
+        LucidChannelHandler handler = this.getHandler(channel);
         handler.player = player;
         handler.joined = true;
     }

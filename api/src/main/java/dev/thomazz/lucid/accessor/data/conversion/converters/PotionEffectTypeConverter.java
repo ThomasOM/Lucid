@@ -12,7 +12,7 @@ import java.lang.reflect.Modifier;
 
 public class PotionEffectTypeConverter implements Converter<PotionEffectType> {
     private static final Class<?> MOB_EFFECT_LIST_CLASS = MinecraftReflection.getMinecraftClass(
-        "net.minecraft.world.effect.MobEffectList",
+        "world.effect.MobEffectList",
         "MobEffectList"
     );
 
