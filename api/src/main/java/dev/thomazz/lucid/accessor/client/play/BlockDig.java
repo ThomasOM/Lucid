@@ -1,6 +1,9 @@
 package dev.thomazz.lucid.accessor.client.play;
 
 import dev.thomazz.lucid.accessor.PacketAccessor;
+import dev.thomazz.lucid.accessor.data.BlockPosition;
+import dev.thomazz.lucid.accessor.data.Direction;
+import dev.thomazz.lucid.accessor.data.conversion.Conversions;
 import dev.thomazz.lucid.packet.PacketType;
 
 /**
@@ -16,28 +19,34 @@ public final class BlockDig extends PacketAccessor {
         super(PacketType.Play.Client.BLOCK_DIG);
     }
 
-    public Object getPos() {
-        return this.get(0);
+    public BlockPosition getPos() {
+        return Conversions.getConverter(BlockPosition.class).fromHandle(this.get(0));
     }
 
-    public void setPos(Object value) {
-        this.set(0, value);
+    public void setPos(BlockPosition value) {
+        this.set(0, Conversions.getConverter(BlockPosition.class).toHandle(value));
     }
 
-    public Object getDirection() {
-        return this.get(1);
+    public Direction getDirection() {
+        int ordinal = ((Enum<?>) this.get(1)).ordinal();
+        return Direction.values()[ordinal];
     }
 
-    public void setDirection(Object value) {
-        this.set(1, value);
+    public void setDirection(Direction value) {
+        Class<?> enumClass = this.getType(1);
+        Object object = enumClass.getEnumConstants()[value.ordinal()];
+        this.set(1, object);
     }
 
-    public Object getAction() {
-        return this.get(2);
+    public PlayerDigType getAction() {
+        int ordinal = ((Enum<?>) this.get(1)).ordinal();
+        return PlayerDigType.values()[ordinal];
     }
 
-    public void setAction(Object value) {
-        this.set(2, value);
+    public void setAction(PlayerDigType value) {
+        Class<?> enumClass = this.getType(1);
+        Object object = enumClass.getEnumConstants()[value.ordinal()];
+        this.set(2, object);
     }
 
     public int getSequence() {
@@ -46,5 +55,15 @@ public final class BlockDig extends PacketAccessor {
 
     public void setSequence(int value) {
         this.set(3, value);
+    }
+
+    public enum PlayerDigType {
+        STARTED_DIGGING,
+        CANCELLED_DIGGING,
+        FINISHED_DIGGING,
+        DROP_ITEM_STACK,
+        DROP_ITEM,
+        FINISH_USING,
+        SWAP_ITEM
     }
 }
