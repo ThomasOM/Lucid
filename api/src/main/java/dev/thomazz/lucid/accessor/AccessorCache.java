@@ -12,7 +12,6 @@ import java.util.Map;
 
 import dev.thomazz.lucid.util.Reflections;
 import lombok.experimental.UtilityClass;
-import sun.reflect.ReflectionFactory;
 
 @UtilityClass
 public class AccessorCache {

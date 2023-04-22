@@ -42,7 +42,7 @@ public class Conversions {
         return (Converter<T>) Conversions.CONVERTER_MAP.get(clazz);
     }
 
-    public <T extends Enum<T>> T convertEnum(Class<T> to, Enum<?> fromObject) {
-        return to.getEnumConstants()[fromObject.ordinal()];
+    public <T> T convertEnum(Class<T> to, Object fromObject) {
+        return to.getEnumConstants()[((Enum<?>) fromObject).ordinal()];
     }
 }

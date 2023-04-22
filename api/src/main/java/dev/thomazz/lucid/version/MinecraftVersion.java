@@ -23,10 +23,6 @@ public class MinecraftVersion {
     private final int majorVersion;
     private final int minorVersion;
 
-    public static void init(JavaPlugin plugin) {
-        MinecraftVersion.CURRENT = MinecraftVersion.parseVersion(plugin);
-    }
-
     /**
      * If the checked version is equal or above this version.
      */
@@ -49,8 +45,24 @@ public class MinecraftVersion {
         return this.majorVersion == version.majorVersion && this.minorVersion <= version.minorVersion;
     }
 
+    @Override
+    public String toString() {
+        return this.majorVersion + "." + this.minorVersion;
+    }
+
+    public static void init(JavaPlugin plugin) {
+        MinecraftVersion.CURRENT = MinecraftVersion.parseVersion(plugin);
+    }
+
     public static MinecraftVersion current() {
         return MinecraftVersion.CURRENT;
+    }
+
+    public static MinecraftVersion fromString(String string) {
+        String[] split = string.split("\\.");
+        int majorVersion = Integer.parseInt(split[0]);
+        int minorVersion = Integer.parseInt(split[1]);
+        return new MinecraftVersion(majorVersion, minorVersion);
     }
 
     private static MinecraftVersion parseVersion(JavaPlugin plugin) {
