@@ -1,6 +1,7 @@
 package dev.thomazz.lucid.accessor.client.play;
 
 import dev.thomazz.lucid.accessor.PacketAccessor;
+import dev.thomazz.lucid.accessor.data.conversion.Conversions;
 import dev.thomazz.lucid.packet.PacketType;
 
 /**
@@ -16,12 +17,12 @@ public final class BlockPlace extends PacketAccessor {
         super(PacketType.Play.Client.BLOCK_PLACE);
     }
 
-    public Object getHand() {
-        return this.get(0);
+    public Hand getHand() {
+        return Conversions.convertEnum(Hand.class, this.get(1));
     }
 
-    public void setHand(Object value) {
-        this.set(0, value);
+    public void setHand(Hand value) {
+        this.set(0, Conversions.convertEnum(this.type(1), value));
     }
 
     public int getSequence() {
@@ -30,5 +31,10 @@ public final class BlockPlace extends PacketAccessor {
 
     public void setSequence(int value) {
         this.set(1, value);
+    }
+
+    public enum Hand {
+        MAIN_HAND,
+        OFF_HAND
     }
 }

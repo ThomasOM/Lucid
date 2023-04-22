@@ -25,7 +25,7 @@ public final class Entity extends PacketAccessor {
     }
 
     public double getXa() {
-        Class<?> type = this.getType(1);
+        Class<?> type = this.type(1);
         if (short.class.equals(type)) {
             return ((short) this.get(1)) / (32.0 * 128.0);
         } else {
@@ -34,7 +34,7 @@ public final class Entity extends PacketAccessor {
     }
 
     public void setXa(double value) {
-        Class<?> type = this.getType(1);
+        Class<?> type = this.type(1);
         if (short.class.equals(type)) {
             this.set(1, (short) (value * (32.0 * 128.0)));
         } else {
@@ -43,7 +43,7 @@ public final class Entity extends PacketAccessor {
     }
 
     public double getYa() {
-        Class<?> type = this.getType(2);
+        Class<?> type = this.type(2);
         if (short.class.equals(type)) {
             return ((short) this.get(2)) / (32.0 * 128.0);
         } else {
@@ -52,7 +52,7 @@ public final class Entity extends PacketAccessor {
     }
 
     public void setYa(double value) {
-        Class<?> type = this.getType(2);
+        Class<?> type = this.type(2);
         if (short.class.equals(type)) {
             this.set(2, (short) (value * (32.0 * 128.0)));
         } else {
@@ -61,7 +61,7 @@ public final class Entity extends PacketAccessor {
     }
 
     public double getZa() {
-        Class<?> type = this.getType(3);
+        Class<?> type = this.type(3);
         if (short.class.equals(type)) {
             return ((short) this.get(3)) / (32.0 * 128.0);
         } else {
@@ -70,7 +70,7 @@ public final class Entity extends PacketAccessor {
     }
 
     public void setZa(double value) {
-        Class<?> type = this.getType(3);
+        Class<?> type = this.type(3);
         if (short.class.equals(type)) {
             this.set(3, (short) (value * (32.0 * 128.0)));
         } else {

@@ -1,6 +1,5 @@
 package dev.thomazz.lucid.accessor.data.conversion.converters;
 
-import dev.thomazz.lucid.accessor.AccessorCache;
 import dev.thomazz.lucid.accessor.data.ChunkCoord;
 import dev.thomazz.lucid.accessor.data.conversion.Converter;
 import dev.thomazz.lucid.util.MinecraftReflection;

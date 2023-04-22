@@ -21,7 +21,7 @@ public final class EntityDestroy extends PacketAccessor {
     }
 
     public List<Integer> getEntityIds() {
-        Class<?> type = this.getType(0);
+        Class<?> type = this.type(0);
         if (List.class.isAssignableFrom(type)) {
             return this.get(0);
         } else {
@@ -30,7 +30,7 @@ public final class EntityDestroy extends PacketAccessor {
     }
 
     public void setEntityIds(List<Integer> values) {
-        Class<?> type = this.getType(0);
+        Class<?> type = this.type(0);
         if (List.class.isAssignableFrom(type)) {
             this.set(0, values);
         } else {

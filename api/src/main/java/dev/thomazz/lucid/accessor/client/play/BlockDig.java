@@ -28,25 +28,19 @@ public final class BlockDig extends PacketAccessor {
     }
 
     public Direction getDirection() {
-        int ordinal = ((Enum<?>) this.get(1)).ordinal();
-        return Direction.values()[ordinal];
+        return Conversions.convertEnum(Direction.class, this.get(1));
     }
 
     public void setDirection(Direction value) {
-        Class<?> enumClass = this.getType(1);
-        Object object = enumClass.getEnumConstants()[value.ordinal()];
-        this.set(1, object);
+        this.set(1, Conversions.convertEnum(this.type(1), value));
     }
 
     public PlayerDigType getAction() {
-        int ordinal = ((Enum<?>) this.get(1)).ordinal();
-        return PlayerDigType.values()[ordinal];
+        return Conversions.convertEnum(PlayerDigType.class, this.get(2));
     }
 
     public void setAction(PlayerDigType value) {
-        Class<?> enumClass = this.getType(1);
-        Object object = enumClass.getEnumConstants()[value.ordinal()];
-        this.set(2, object);
+        this.set(2, Conversions.convertEnum(this.type(1), value));
     }
 
     public int getSequence() {

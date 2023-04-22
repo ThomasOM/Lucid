@@ -4,12 +4,14 @@ import dev.thomazz.lucid.accessor.data.BlockPosition;
 import dev.thomazz.lucid.accessor.data.ChunkCoord;
 import dev.thomazz.lucid.accessor.data.MultiBlockChangeInfo;
 import dev.thomazz.lucid.accessor.data.SectionPosition;
+import dev.thomazz.lucid.accessor.data.WatchableObject;
 import dev.thomazz.lucid.accessor.data.conversion.converters.BlockDataConverter;
 import dev.thomazz.lucid.accessor.data.conversion.converters.BlockPositionConverter;
 import dev.thomazz.lucid.accessor.data.conversion.converters.ChunkCoordConverter;
 import dev.thomazz.lucid.accessor.data.conversion.converters.MultiBlockChangeInfoConverter;
 import dev.thomazz.lucid.accessor.data.conversion.converters.PotionEffectTypeConverter;
 import dev.thomazz.lucid.accessor.data.conversion.converters.SectionPositionConverter;
+import dev.thomazz.lucid.accessor.data.conversion.converters.WatchableObjectConverter;
 import lombok.experimental.UtilityClass;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.potion.PotionEffectType;
@@ -28,6 +30,7 @@ public class Conversions {
         Conversions.register(SectionPosition.class, new SectionPositionConverter());
         Conversions.register(MultiBlockChangeInfo.class, new MultiBlockChangeInfoConverter());
         Conversions.register(PotionEffectType.class, new PotionEffectTypeConverter());
+        Conversions.register(WatchableObject.class, new WatchableObjectConverter());
     }
 
     private <T> void register(Class<T> clazz, Converter<T> converter) {
@@ -37,5 +40,9 @@ public class Conversions {
     @SuppressWarnings("unchecked")
     public <T> Converter<T> getConverter(Class<T> clazz) {
         return (Converter<T>) Conversions.CONVERTER_MAP.get(clazz);
+    }
+
+    public <T extends Enum<T>> T convertEnum(Class<T> to, Enum<?> fromObject) {
+        return to.getEnumConstants()[fromObject.ordinal()];
     }
 }

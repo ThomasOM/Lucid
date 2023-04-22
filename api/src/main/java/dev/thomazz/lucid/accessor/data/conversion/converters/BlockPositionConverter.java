@@ -31,10 +31,10 @@ public class BlockPositionConverter extends Converter<BlockPosition> {
 
     @Override
     public Object convertTo(BlockPosition pos) throws Exception {
-        Class<?> clazz = BlockPositionConverter.BASE_BLOCK_POSITION_CLASS;
-        Constructor<?> constructor = this.cache("init", () -> Reflections.getNoArgsConstructor(clazz));
+        Constructor<?> constructor = this.cache("init", () -> Reflections.getNoArgsConstructor(BlockPositionConverter.BLOCK_POSITION_CLASS));
         Object handle = constructor.newInstance();
 
+        Class<?> clazz = BlockPositionConverter.BASE_BLOCK_POSITION_CLASS;
         Field xField = this.cache("x", () -> Reflections.getFieldByIndex(clazz, 0));
         Field yField = this.cache("y", () -> Reflections.getFieldByIndex(clazz, 1));
         Field zField = this.cache("z", () -> Reflections.getFieldByIndex(clazz, 2));

@@ -25,7 +25,7 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public double getX() {
-        Class<?> type = this.getType(1);
+        Class<?> type = this.type(1);
         if (int.class.isAssignableFrom(type)) {
             return (double) this.get(1) / 32.0;
         }
@@ -34,7 +34,7 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public void setX(double value) {
-        Class<?> type = this.getType(1);
+        Class<?> type = this.type(1);
         if (int.class.isAssignableFrom(type)) {
             this.set(1, (int) (value * 32.0));
         } else {
@@ -43,7 +43,7 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public double getY() {
-        Class<?> type = this.getType(2);
+        Class<?> type = this.type(2);
         if (int.class.isAssignableFrom(type)) {
             return (double) this.get(2) / 32.0;
         }
@@ -52,7 +52,7 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public void setY(double value) {
-        Class<?> type = this.getType(2);
+        Class<?> type = this.type(2);
         if (int.class.isAssignableFrom(type)) {
             this.set(2, (int) (value * 32.0));
         } else {
@@ -61,7 +61,7 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public double getZ() {
-        Class<?> type = this.getType(3);
+        Class<?> type = this.type(3);
         if (int.class.isAssignableFrom(type)) {
             return (double) this.get(3) / 32.0;
         }
@@ -70,7 +70,7 @@ public final class EntityTeleport extends PacketAccessor {
     }
 
     public void setZ(double value) {
-        Class<?> type = this.getType(3);
+        Class<?> type = this.type(3);
         if (int.class.isAssignableFrom(type)) {
             this.set(3, (int) (value * 32.0));
         } else {

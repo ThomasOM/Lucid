@@ -1,6 +1,7 @@
 package dev.thomazz.lucid.accessor.client.play;
 
 import dev.thomazz.lucid.accessor.PacketAccessor;
+import dev.thomazz.lucid.accessor.data.conversion.Conversions;
 import dev.thomazz.lucid.packet.PacketType;
 
 /**
@@ -25,14 +26,11 @@ public final class EntityAction extends PacketAccessor {
     }
 
     public Action getAction() {
-        int ordinal = ((Enum<?>) this.get(1)).ordinal();
-        return Action.values()[ordinal];
+        return Conversions.convertEnum(Action.class, this.get(1));
     }
 
     public void setAction(Action value) {
-        Class<?> enumClass = this.getType(1);
-        Object object = enumClass.getEnumConstants()[value.ordinal()];
-        this.set(1, object);
+        this.set(1, Conversions.convertEnum(this.type(1), value));
     }
 
     public int getData() {

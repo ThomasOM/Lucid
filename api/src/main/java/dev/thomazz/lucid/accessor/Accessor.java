@@ -16,7 +16,7 @@ public abstract class Accessor {
         AccessorCache.set(this.handle.getClass(), this.handle, fieldId, value);
     }
 
-    protected <T> Class<T> getType(int fieldId) {
+    protected <T> Class<T> type(int fieldId) {
         return AccessorCache.type(this.handle.getClass(), fieldId);
     }
 }
