@@ -20,7 +20,6 @@ public class LucidChannelHandler extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         PacketType type = PacketType.fromClass(msg.getClass());
         PacketAccessor accessor = PacketAccessorRegistry.createAccessor(type, msg);
-
         PacketReceiveEvent event = new PacketReceiveEvent(this.player, accessor);
         Bukkit.getPluginManager().callEvent(event);
 
@@ -33,9 +32,8 @@ public class LucidChannelHandler extends ChannelDuplexHandler {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         PacketType type = PacketType.fromClass(msg.getClass());
         PacketAccessor accessor = PacketAccessorRegistry.createAccessor(type, msg);
-
         PacketSendEvent event = new PacketSendEvent(this.player, accessor);
-        Bukkit.getPluginManager(). callEvent(event);
+        Bukkit.getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             super.write(ctx, msg, promise);

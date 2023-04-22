@@ -35,7 +35,7 @@ public final class Lucid {
 
     private Lucid(Injector injector) {
         this.injector = injector;
-        this.playerManager = new PlayerManager();
+        this.playerManager = new PlayerManager(this);
         this.channelAccess = new ReflectiveChannelAccess();
     }
     

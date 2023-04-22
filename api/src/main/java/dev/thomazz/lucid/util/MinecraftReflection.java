@@ -1,7 +1,6 @@
 package dev.thomazz.lucid.util;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
@@ -10,7 +9,7 @@ import org.bukkit.Bukkit;
 public class MinecraftReflection {
     public Object getServerConnection() throws Exception {
         Object minecraftServer = Bukkit.getServer().getClass().getDeclaredMethod("getServer").invoke(Bukkit.getServer());
-        Field connectionField = ReflectionUtil.getFieldByClassNames(minecraftServer.getClass().getSuperclass(), "ServerConnection");
+        Field connectionField = Reflections.getFieldByClassNames(minecraftServer.getClass().getSuperclass(), "ServerConnection");
         return connectionField.get(minecraftServer);
     }
 
@@ -23,7 +22,7 @@ public class MinecraftReflection {
             }
         }
 
-        throw new RuntimeException("Could not find minecraft class: " + Arrays.toString(names));
+        return null;
     }
 
     public Class<?> getMinecraftClass(String... names) {
@@ -41,7 +40,7 @@ public class MinecraftReflection {
             }
         }
 
-        throw new RuntimeException("Could not find minecraft class: " + Arrays.toString(names));
+        return null;
     }
 
     public String getCraftBukkitPackage() {

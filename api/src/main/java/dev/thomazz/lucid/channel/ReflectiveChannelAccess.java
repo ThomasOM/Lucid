@@ -1,7 +1,7 @@
 package dev.thomazz.lucid.channel;
 
 import dev.thomazz.lucid.util.MinecraftReflection;
-import dev.thomazz.lucid.util.ReflectionUtil;
+import dev.thomazz.lucid.util.Reflections;
 import io.netty.channel.Channel;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
@@ -35,8 +35,8 @@ public final class ReflectiveChannelAccess implements ChannelAccess {
 
             List<Object> networkManagers = this.getNetworkManagers();
 
-            Field channelField = ReflectionUtil.getFieldByType(ReflectiveChannelAccess.NETWORK_MANAGER_CLASS, Channel.class);
-            Field listenerField = ReflectionUtil.getFieldByType(ReflectiveChannelAccess.NETWORK_MANAGER_CLASS,
+            Field channelField = Reflections.getFieldByType(ReflectiveChannelAccess.NETWORK_MANAGER_CLASS, Channel.class);
+            Field listenerField = Reflections.getFieldByType(ReflectiveChannelAccess.NETWORK_MANAGER_CLASS,
                 ReflectiveChannelAccess.PACKET_LISTENER_CLASS);
 
             for (Object networkManager : networkManagers) {
@@ -44,17 +44,17 @@ public final class ReflectiveChannelAccess implements ChannelAccess {
                 if (packetListener != null) {
                     if (packetListener.getClass().getSimpleName().equals("LoginListener")) {
                         // We can use the game profile to look up the player id in the listener
-                        Field profileField = ReflectionUtil.getFieldByClassNames(packetListener.getClass(), "GameProfile");
+                        Field profileField = Reflections.getFieldByClassNames(packetListener.getClass(), "GameProfile");
                         Object gameProfile = profileField.get(packetListener);
 
-                        Field uuidField = ReflectionUtil.getFieldByType(gameProfile.getClass(), UUID.class);
+                        Field uuidField = Reflections.getFieldByType(gameProfile.getClass(), UUID.class);
                         UUID foundId = (UUID) uuidField.get(gameProfile);
                         if (playerId.equals(foundId)) {
                             return (Channel) channelField.get(networkManager);
                         }
                     } else {
                         // For player connection listeners we can get the player handle
-                        Field playerField = ReflectionUtil.getFieldByClassNames(packetListener.getClass(), "EntityPlayer");
+                        Field playerField = Reflections.getFieldByClassNames(packetListener.getClass(), "EntityPlayer");
                         Object entityPlayer = playerField.get(packetListener);
                         if (handle.equals(entityPlayer)) {
                             return (Channel) channelField.get(networkManager);
@@ -81,7 +81,7 @@ public final class ReflectiveChannelAccess implements ChannelAccess {
     public Collection<Channel> getAllChannels() {
         try {
             List<Object> networkManagers = this.getNetworkManagers();
-            Field channelField = ReflectionUtil.getFieldByType(ReflectiveChannelAccess.NETWORK_MANAGER_CLASS, Channel.class);
+            Field channelField = Reflections.getFieldByType(ReflectiveChannelAccess.NETWORK_MANAGER_CLASS, Channel.class);
 
             List<Channel> channels = new ArrayList<>();
             for (Object o : Collections.synchronizedList(networkManagers)) {

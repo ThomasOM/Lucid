@@ -5,7 +5,7 @@ import dev.thomazz.lucid.channel.LucidChannelHandler;
 import dev.thomazz.lucid.inject.Injector;
 import dev.thomazz.lucid.util.ListWrapper;
 import dev.thomazz.lucid.util.MinecraftReflection;
-import dev.thomazz.lucid.util.ReflectionUtil;
+import dev.thomazz.lucid.util.Reflections;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -68,7 +68,7 @@ public class ServerConnectionInjector implements Injector {
             for (ChannelFuture future : this.futures) {
                 try {
                     ChannelHandler bootstrap = future.channel().pipeline().first();
-                    Field childHandlerField = ReflectionUtil.getFieldByName(bootstrap.getClass(), "childHandler");
+                    Field childHandlerField = Reflections.getFieldByName(bootstrap.getClass(), "childHandler");
                     InjectChannelInitializer injected = (InjectChannelInitializer) childHandlerField.get(bootstrap);
                     childHandlerField.set(bootstrap, injected.getParent());
                 } catch (Exception ignored) {
@@ -94,7 +94,7 @@ public class ServerConnectionInjector implements Injector {
         for (String name : names) {
             ChannelHandler handler = future.channel().pipeline().get(name);
             try {
-                ReflectionUtil.getFieldByName(handler.getClass(), "childHandler");
+                Reflections.getFieldByName(handler.getClass(), "childHandler");
                 bootstrap = handler;
                 break;
             } catch (ReflectiveOperationException ignored) {
@@ -106,7 +106,7 @@ public class ServerConnectionInjector implements Injector {
         }
 
         try {
-            Field childHandlerField = ReflectionUtil.getFieldByName(bootstrap.getClass(), "childHandler");
+            Field childHandlerField = Reflections.getFieldByName(bootstrap.getClass(), "childHandler");
             ChannelInitializer<Channel> oldInitializer = (ChannelInitializer<Channel>) childHandlerField.get(bootstrap);
             childHandlerField.set(bootstrap, new InjectChannelInitializer(oldInitializer));
             this.futures.add(future);

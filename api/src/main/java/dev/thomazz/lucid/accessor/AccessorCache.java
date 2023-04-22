@@ -9,24 +9,16 @@ import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+
+import dev.thomazz.lucid.util.Reflections;
 import lombok.experimental.UtilityClass;
 import sun.reflect.ReflectionFactory;
 
 @UtilityClass
 public class AccessorCache {
     private final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
-    private final Constructor<?> DEFAULT_CONSTRUCTOR;
-
     private final Map<Class<?>, CacheContainer> TYPE_CONTAINERS = new IdentityHashMap<>();
     private final Map<Class<?>, Constructor<?>> TYPE_CONSTRUCTORS = new IdentityHashMap<>();
-
-    static {
-        try {
-            DEFAULT_CONSTRUCTOR = Object.class.getDeclaredConstructor();
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not set up packet method cache", ex);
-        }
-    }
 
     @SuppressWarnings("unchecked")
     public <T> T get(Class<?> type, Object object, int id) {
@@ -61,11 +53,7 @@ public class AccessorCache {
 
     public <T> T create(Class<T> clazz) {
         try {
-            Constructor<?> noArgs = TYPE_CONSTRUCTORS.computeIfAbsent(clazz,
-                type -> ReflectionFactory.getReflectionFactory()
-                    .newConstructorForSerialization(clazz, DEFAULT_CONSTRUCTOR)
-            );
-
+            Constructor<?> noArgs = TYPE_CONSTRUCTORS.computeIfAbsent(clazz, key -> Reflections.getNoArgsConstructor(clazz));
             return clazz.cast(noArgs.newInstance());
         } catch (Exception ex) {
             throw new RuntimeException("Failed to create object: " + clazz.getName(), ex);

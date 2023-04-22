@@ -1,6 +1,7 @@
 package dev.thomazz.lucid.util;
 
 import lombok.experimental.UtilityClass;
+import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -9,7 +10,26 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 @UtilityClass
-public class ReflectionUtil {
+public class Reflections {
+    private final Constructor<?> DEFAULT_CONSTRUCTOR;
+
+    static {
+        try {
+            DEFAULT_CONSTRUCTOR = Object.class.getDeclaredConstructor();
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not set up packet method cache", ex);
+        }
+    }
+
+    public Field getFieldByIndex(Class<?> clazz, int index) {
+        Field[] declared = clazz.getDeclaredFields();
+        if (index < declared.length) {
+            return declared[index];
+        }
+
+        throw new RuntimeException("Could not find method in class " + clazz.getName() + "!");
+    }
+
     public Field getFieldByClassNames(Class<?> clazz, String... simpleNames) throws NoSuchFieldException {
         for (String name : simpleNames) {
             for (Field field : clazz.getDeclaredFields()) {
@@ -96,21 +116,12 @@ public class ReflectionUtil {
         throw new RuntimeException("Could not find method in class " + clazz.getName() + "!");
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T invokeMethod(Method method, Object object, Object... params) {
+    public Constructor<?> getNoArgsConstructor(Class<?> clazz) {
         try {
-            return (T) method.invoke(object, params);
+            return ReflectionFactory.getReflectionFactory()
+                .newConstructorForSerialization(clazz, Reflections.DEFAULT_CONSTRUCTOR);
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T invokeConstructor(Constructor<?> constructor, Object... params) {
-        try {
-            return (T) constructor.newInstance(params);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("Failed to create object: " + clazz.getName(), ex);
         }
     }
 }
