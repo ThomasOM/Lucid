@@ -13,6 +13,7 @@ public class MinecraftVersion {
     public static final MinecraftVersion V1_8 = new MinecraftVersion(1, 8);
     public static final MinecraftVersion V1_12 = new MinecraftVersion(1, 12);
     public static final MinecraftVersion V1_14 = new MinecraftVersion(1, 14);
+    public static final MinecraftVersion V1_15 = new MinecraftVersion(1, 15);
     public static final MinecraftVersion V1_16 = new MinecraftVersion(1, 16);
     public static final MinecraftVersion V1_17 = new MinecraftVersion(1, 17);
     public static final MinecraftVersion V1_18 = new MinecraftVersion(1, 18);

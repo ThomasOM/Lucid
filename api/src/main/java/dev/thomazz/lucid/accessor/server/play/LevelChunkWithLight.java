@@ -1,6 +1,8 @@
 package dev.thomazz.lucid.accessor.server.play;
 
 import dev.thomazz.lucid.accessor.PacketAccessor;
+import dev.thomazz.lucid.accessor.data.LevelChunkPacketData;
+import dev.thomazz.lucid.accessor.data.conversion.Conversions;
 import dev.thomazz.lucid.packet.PacketType;
 
 /**
@@ -32,12 +34,12 @@ public final class LevelChunkWithLight extends PacketAccessor {
         this.set(1, value);
     }
 
-    public Object getChunkData() {
-        return this.get(2);
+    public LevelChunkPacketData getChunkData() {
+        return Conversions.getConverter(LevelChunkPacketData.class).fromHandle(this.get(2));
     }
 
-    public void setChunkData(Object value) {
-        this.set(2, value);
+    public void setChunkData(LevelChunkPacketData value) {
+        this.set(2, Conversions.getConverter(LevelChunkPacketData.class).toHandle(value));
     }
 
     public Object getLightData() {
