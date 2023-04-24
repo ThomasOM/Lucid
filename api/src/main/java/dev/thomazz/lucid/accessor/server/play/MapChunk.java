@@ -50,7 +50,7 @@ public final class MapChunk extends PacketAccessor {
         this.set(2, value);
     }
 
-    public int getBitSet() {
+    public BitSet getBitSet() {
         return this.get(2);
     }
 
