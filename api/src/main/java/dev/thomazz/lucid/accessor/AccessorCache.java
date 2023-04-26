@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.IdentityHashMap;
@@ -104,6 +105,10 @@ public class AccessorCache {
 
             Class<?> scan = clazz;
             while (scan != null && !Object.class.equals(scan)) {
+                Arrays.stream(scan.getDeclaredFields())
+                    .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                    .forEach(declared::add);
+
                 declared.addAll(Arrays.asList(scan.getDeclaredFields()));
                 scan = scan.getSuperclass();
             }

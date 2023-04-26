@@ -3,12 +3,13 @@ package dev.thomazz.lucid.version;
 import lombok.Data;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Data
 public class MinecraftVersion {
-    private static final Pattern PATTERN = Pattern.compile("([1-9])\\w+");
+    private static final Pattern PATTERN = Pattern.compile("[1-9]\\w*");
 
     public static final MinecraftVersion V1_8 = new MinecraftVersion(1, 8);
     public static final MinecraftVersion V1_12 = new MinecraftVersion(1, 12);
@@ -67,16 +68,20 @@ public class MinecraftVersion {
     }
 
     private static MinecraftVersion parseVersion(JavaPlugin plugin) {
-        String packageName = plugin.getServer().getClass().getPackage().getName();
-        Matcher matcher = MinecraftVersion.PATTERN.matcher(packageName);
-        if (matcher.find()) {
-            String match = matcher.group();
-            String[] split = match.split(match);
-            int major = Integer.parseInt(split[0]);
-            int minor = Integer.parseInt(split[1]);
-            return new MinecraftVersion(major, minor);
-        } else {
-            throw new RuntimeException("Could not find craftbukkit version!");
+        try {
+            String packageName = plugin.getServer().getClass().getPackage().getName();
+            Matcher matcher = MinecraftVersion.PATTERN.matcher(packageName);
+            if (matcher.find()) {
+                String match = matcher.group();
+                String[] split = match.split("_");
+                int major = Integer.parseInt(split[0]);
+                int minor = Integer.parseInt(split[1]);
+                return new MinecraftVersion(major, minor);
+            } else {
+                throw new NoSuchElementException("Could not match package name version strings!");
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not read MC version!", ex);
         }
     }
 }

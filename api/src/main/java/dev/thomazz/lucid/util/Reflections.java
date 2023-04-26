@@ -6,6 +6,7 @@ import sun.reflect.ReflectionFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
@@ -22,9 +23,14 @@ public class Reflections {
     }
 
     public Field getFieldByIndex(Class<?> clazz, int index) {
-        Field[] declared = clazz.getDeclaredFields();
-        if (index < declared.length) {
-            return declared[index];
+        int i = 0;
+        for (Field field : clazz.getDeclaredFields()) {
+            if (!Modifier.isStatic(field.getModifiers())) {
+                if (i++ == index) {
+                    field.setAccessible(true);
+                    return field;
+                }
+            }
         }
 
         throw new RuntimeException("Could not find method in class " + clazz.getName() + "!");
@@ -77,6 +83,7 @@ public class Reflections {
                 }
             }
 
+            method.setAccessible(true);
             return method;
         }
 
@@ -94,6 +101,7 @@ public class Reflections {
                 }
             }
 
+            constructor.setAccessible(true);
             return (Constructor<T>) constructor;
         }
 
@@ -110,6 +118,7 @@ public class Reflections {
                 }
             }
 
+            field.setAccessible(true);
             return field;
         }
 

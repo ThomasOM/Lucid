@@ -11,6 +11,16 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class WatchableObjectConverter extends Converter<WatchableObject> {
+    private static final Class<?> DATA_WATCHER_OBJECT_CLASS = MinecraftReflection.getMinecraftClass(
+        "network.syncher.DataWatcherObject",
+        "DataWatcherObject"
+    );
+
+    private static final Class<?> DATA_VALUE_CLASS = MinecraftReflection.getMinecraftClass(
+        "network.syncher.DataWatcher$DataValue",
+        "network.syncher.DataWatcher$b"
+    );
+
     private static final Class<?> WATCHABLE_OBJECT_CLASS = MinecraftReflection.getMinecraftClass(
         "network.syncher.DataWatcher$Item",
         "network.syncher.SynchedEntityData$DataItem",
@@ -18,19 +28,28 @@ public class WatchableObjectConverter extends Converter<WatchableObject> {
         "DataWatcher$WatchableObject"
     );
 
-    private static final Class<?> DATA_WATCHER_OBJECT_CLASS = MinecraftReflection.getMinecraftClass(
-        "network.syncher.DataWatcherObject",
-        "DataWatcherObject"
-    );
-
     private static final Class<?> DATA_WATCHER_REGISTRY_CLASS = MinecraftReflection.getMinecraftClass(
         "network.syncher.DataWatcherRegistry",
         "DataWatcherRegistry"
     );
 
+
     @Override
     public WatchableObject convertFrom(Object handle) throws Exception {
-        if (WatchableObjectConverter.DATA_WATCHER_OBJECT_CLASS != null) {
+        if (WatchableObjectConverter.DATA_VALUE_CLASS != null) {
+            Field idField = this.cache("id", () -> Reflections.getFieldByIndex(WatchableObjectConverter.DATA_VALUE_CLASS, 0));
+            Field serializerField = this.cache("serializer", () -> Reflections.getFieldByIndex(WatchableObjectConverter.DATA_VALUE_CLASS, 1));
+            Field objectField = this.cache("object", () -> Reflections.getFieldByIndex(WatchableObjectConverter.DATA_VALUE_CLASS, 2));
+
+            Method serializerToId = this.cache("serializerToId", () -> Reflections.findMethod(WatchableObjectConverter.DATA_WATCHER_REGISTRY_CLASS,
+                method -> Modifier.isStatic(method.getModifiers()),
+                method -> method.getParameterTypes().length == 1,
+                method -> method.getReturnType().equals(int.class)
+            ));
+
+            Object serializer = serializerField.get(handle);
+            return new WatchableObject((int) serializerToId.invoke(null, serializer), (int) idField.get(handle), objectField.get(handle));
+        } else if (WatchableObjectConverter.DATA_WATCHER_OBJECT_CLASS != null) {
             Field dataField = this.cache("data", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 0));
             Field objectField = this.cache("object", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 1));
 
@@ -40,7 +59,7 @@ public class WatchableObjectConverter extends Converter<WatchableObject> {
             Method serializerToId = this.cache("serializerToId", () -> Reflections.findMethod(WatchableObjectConverter.DATA_WATCHER_REGISTRY_CLASS,
                 method -> Modifier.isStatic(method.getModifiers()),
                 method -> method.getParameterTypes().length == 1,
-                method -> method.getParameterTypes()[0].equals(int.class)
+                method -> method.getReturnType().equals(int.class)
             ));
 
             Object serializer = serializerField.get(data);
@@ -55,10 +74,31 @@ public class WatchableObjectConverter extends Converter<WatchableObject> {
 
     @Override
     public Object convertTo(WatchableObject object) throws Exception {
-        Constructor<?> constructor = this.cache("init", () -> Reflections.getNoArgsConstructor(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS));
-        Object handle = constructor.newInstance();
+        if (WatchableObjectConverter.DATA_VALUE_CLASS != null) {
+            Constructor<?> constructor = this.cache("init", () -> Reflections.getNoArgsConstructor(WatchableObjectConverter.DATA_VALUE_CLASS));
+            Object handle = constructor.newInstance();
 
-        if (WatchableObjectConverter.DATA_WATCHER_OBJECT_CLASS != null) {
+            Field idField = this.cache("id", () -> Reflections.getFieldByIndex(WatchableObjectConverter.DATA_VALUE_CLASS, 0));
+            Field serializerField = this.cache("serializer", () -> Reflections.getFieldByIndex(WatchableObjectConverter.DATA_VALUE_CLASS, 1));
+            Field objectField = this.cache("object", () -> Reflections.getFieldByIndex(WatchableObjectConverter.DATA_VALUE_CLASS, 2));
+
+            Method idToSerializer = this.cache("idToSerializer", () -> Reflections.findMethod(WatchableObjectConverter.DATA_WATCHER_REGISTRY_CLASS,
+                method -> Modifier.isStatic(method.getModifiers()),
+                method -> method.getParameterTypes().length == 1,
+                method -> method.getParameterTypes()[0].equals(int.class)
+            ));
+
+            Object serializer = idToSerializer.invoke(null, object.getType());
+
+            idField.set(handle, object.getId());
+            serializerField.set(handle, serializer);
+            objectField.set(handle, object.getValue());
+
+            return handle;
+        } else if (WatchableObjectConverter.DATA_WATCHER_OBJECT_CLASS != null) {
+            Constructor<?> constructor = this.cache("init", () -> Reflections.getNoArgsConstructor(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS));
+            Object handle = constructor.newInstance();
+
             Field dataField = this.cache("data", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 0));
             Field objectField = this.cache("object", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 1));
 
@@ -67,7 +107,7 @@ public class WatchableObjectConverter extends Converter<WatchableObject> {
             Method idToSerializer = this.cache("idToSerializer", () -> Reflections.findMethod(WatchableObjectConverter.DATA_WATCHER_REGISTRY_CLASS,
                 method -> Modifier.isStatic(method.getModifiers()),
                 method -> method.getParameterTypes().length == 1,
-                method -> method.getParameterTypes()[0].equals(WatchableObjectConverter.DATA_WATCHER_OBJECT_CLASS)
+                method -> method.getParameterTypes()[0].equals(int.class)
             ));
 
             Object serializer = idToSerializer.invoke(null, object.getType());
@@ -79,7 +119,12 @@ public class WatchableObjectConverter extends Converter<WatchableObject> {
 
             dataField.set(handle, data);
             objectField.set(handle, object.getValue());
+
+            return handle;
         } else {
+            Constructor<?> constructor = this.cache("init", () -> Reflections.getNoArgsConstructor(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS));
+            Object handle = constructor.newInstance();
+
             Field typeField = this.cache("type", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 0));
             Field idField = this.cache("id", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 1));
             Field objectField = this.cache("object", () -> Reflections.getFieldByIndex(WatchableObjectConverter.WATCHABLE_OBJECT_CLASS, 2));
@@ -87,8 +132,8 @@ public class WatchableObjectConverter extends Converter<WatchableObject> {
             typeField.set(handle, object.getType());
             idField.set(handle, object.getId());
             objectField.set(handle, object.getValue());
-        }
 
-        return handle;
+            return handle;
+        }
     }
 }

@@ -23,8 +23,8 @@ public class BlockDataConverter extends Converter<BlockData> {
     public BlockData convertFrom(Object handle) throws Exception {
         Method from = this.cache("from", () -> Reflections.findMethod(BlockDataConverter.CRAFT_BLOCK_DATA_CLASS,
             method -> Modifier.isStatic(method.getModifiers()),
-            method -> method.getParameters().length == 1,
-            method -> method.getReturnType().equals(handle.getClass())
+            method -> method.getParameterCount() == 1,
+            method -> method.getReturnType().equals(BlockDataConverter.CRAFT_BLOCK_DATA_CLASS)
         ));
 
         return (BlockData) from.invoke(null, handle);
@@ -34,7 +34,7 @@ public class BlockDataConverter extends Converter<BlockData> {
     public Object convertTo(BlockData data) throws Exception {
         Method to = this.cache("to", () -> Reflections.findMethod(BlockDataConverter.CRAFT_BLOCK_DATA_CLASS,
             method -> !Modifier.isStatic(method.getModifiers()),
-            method -> method.getParameters().length == 0,
+            method -> method.getParameterCount() == 0,
             method -> method.getReturnType().equals(BlockDataConverter.BLOCKDATA_CLASS)
         ));
 

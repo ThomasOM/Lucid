@@ -44,6 +44,8 @@ public final class Lucid {
             throw new IllegalStateException("Can not re-use the same instance after destroying it!");
         }
 
+        MinecraftVersion.init(plugin);
+
         this.plugin = plugin;
         this.plugin.getLogger().info("[Lucid] Starting Lucid Packet API");
 
