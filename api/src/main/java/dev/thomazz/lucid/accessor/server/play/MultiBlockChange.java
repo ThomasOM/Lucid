@@ -6,7 +6,7 @@ import dev.thomazz.lucid.accessor.data.MultiBlockChangeInfo;
 import dev.thomazz.lucid.accessor.data.SectionPosition;
 import dev.thomazz.lucid.accessor.data.conversion.Conversions;
 import dev.thomazz.lucid.packet.PacketType;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.Material;
 
 import java.util.Arrays;
 
@@ -56,14 +56,14 @@ public final class MultiBlockChange extends PacketAccessor {
         this.set(1, Arrays.stream(value).map(Conversions.getConverter(MultiBlockChangeInfo.class)::toHandle).toArray());
     }
 
-    public BlockData[] getStates() {
+    public Material[] getStates() {
         return Arrays.stream((Object[]) this.get(2))
-            .map(Conversions.getConverter(BlockData.class)::fromHandle)
-            .toArray(BlockData[]::new);
+            .map(Conversions.getConverter(Material.class)::fromHandle)
+            .toArray(Material[]::new);
     }
 
-    public void setStates(BlockData[] value) {
-        this.set(2, Arrays.stream(value).map(Conversions.getConverter(BlockData.class)::toHandle).toArray());
+    public void setStates(Material[] value) {
+        this.set(2, Arrays.stream(value).map(Conversions.getConverter(Material.class)::toHandle).toArray());
     }
 
     public boolean getSuppressLightUpdates() {
