@@ -18,7 +18,7 @@ public class ChunkMapConverter extends Converter<ChunkMap> {
         Class<?> clazz = ChunkMapConverter.CHUNK_MAP_CLASS;
         Field dataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 0));
         Field maskField = this.cache("mask", () -> Reflections.getFieldByIndex(clazz, 1));
-        return new ChunkMap((byte[]) dataField.get(handle), (int) maskField.get(dataField));
+        return new ChunkMap((byte[]) dataField.get(handle), (int) maskField.get(handle));
     }
 
     @Override

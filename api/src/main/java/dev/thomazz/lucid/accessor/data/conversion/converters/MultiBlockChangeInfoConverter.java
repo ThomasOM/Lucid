@@ -1,12 +1,11 @@
 package dev.thomazz.lucid.accessor.data.conversion.converters;
 
-import dev.thomazz.lucid.accessor.AccessorCache;
 import dev.thomazz.lucid.accessor.data.MultiBlockChangeInfo;
 import dev.thomazz.lucid.accessor.data.conversion.Conversions;
 import dev.thomazz.lucid.accessor.data.conversion.Converter;
 import dev.thomazz.lucid.util.MinecraftReflection;
 import dev.thomazz.lucid.util.Reflections;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.Material;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,8 +22,8 @@ public class MultiBlockChangeInfoConverter extends Converter<MultiBlockChangeInf
         Field blockDataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 0));
 
         short location = (short) locationField.get(handle);
-        BlockData data = Conversions.getConverter(BlockData.class).fromHandle(blockDataField.get(handle));
-        return new MultiBlockChangeInfo(location, data);
+        Material material = Conversions.getConverter(Material.class).fromHandle(blockDataField.get(handle));
+        return new MultiBlockChangeInfo(location, material);
     }
 
     @Override
@@ -37,7 +36,7 @@ public class MultiBlockChangeInfoConverter extends Converter<MultiBlockChangeInf
         Field blockDataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 0));
 
         locationField.set(handle, pos.getLocation());
-        blockDataField.set(handle, pos.getBlockData());
+        blockDataField.set(handle, Conversions.getConverter(Material.class).toHandle(pos.getMaterial()));
         return handle;
     }
 }
