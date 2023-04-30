@@ -56,13 +56,13 @@ public final class MultiBlockChange extends PacketAccessor {
         this.set(1, Arrays.stream(value).map(Conversions.getConverter(MultiBlockChangeInfo.class)::toHandle).toArray());
     }
 
-    public Material[] getStates() {
+    public Material[] getMaterials() {
         return Arrays.stream((Object[]) this.get(2))
             .map(Conversions.getConverter(Material.class)::fromHandle)
             .toArray(Material[]::new);
     }
 
-    public void setStates(Material[] value) {
+    public void getMaterials(Material[] value) {
         this.set(2, Arrays.stream(value).map(Conversions.getConverter(Material.class)::toHandle).toArray());
     }
 

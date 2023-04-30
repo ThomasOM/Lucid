@@ -19,7 +19,7 @@ public class MultiBlockChangeInfoConverter extends Converter<MultiBlockChangeInf
     public MultiBlockChangeInfo convertFrom(Object handle) throws Exception {
         Class<?> clazz = MultiBlockChangeInfoConverter.MULTI_BLOCK_CHANGE_INFO_CLASS;
         Field locationField = this.cache("location", () -> Reflections.getFieldByIndex(clazz, 0));
-        Field blockDataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 0));
+        Field blockDataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 1));
 
         short location = (short) locationField.get(handle);
         Material material = Conversions.getConverter(Material.class).fromHandle(blockDataField.get(handle));
@@ -33,7 +33,7 @@ public class MultiBlockChangeInfoConverter extends Converter<MultiBlockChangeInf
         Object handle = constructor.newInstance();
 
         Field locationField = this.cache("location", () -> Reflections.getFieldByIndex(clazz, 0));
-        Field blockDataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 0));
+        Field blockDataField = this.cache("data", () -> Reflections.getFieldByIndex(clazz, 1));
 
         locationField.set(handle, pos.getLocation());
         blockDataField.set(handle, Conversions.getConverter(Material.class).toHandle(pos.getMaterial()));
